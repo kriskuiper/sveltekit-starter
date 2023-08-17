@@ -1,0 +1,40 @@
+name: 'CI pipeline'
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  codestyle:
+    runs-on: ubuntu-latest
+    name: 'Codestyle & TypeScript'
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 7.28.0
+      - uses: pnpm/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+      - run: pnpm install
+      - run: pnpm check
+      - run: pnpm lint
+
+  tests:
+    needs:
+      - codestyle
+    runs-on: ubuntu-latest
+    name: '🧪 Unit- and E2E tests'
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 7.28.0
+      - uses: pnpm/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+      - run: pnpm install
+      - run: pnpm test
