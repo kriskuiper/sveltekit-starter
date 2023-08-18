@@ -6,7 +6,8 @@ const config: PlaywrightTestConfig = {
 		port: 4173
 	},
 	testDir: 'tests/integration',
-	testMatch: /(.+\.)?(test|spec)\.[jt]s/
+	testMatch: /(.+\.)?(test|spec)\.[jt]s/,
+	workers: process.env.CI ? 1 : undefined
 };
 
 export default config;

@@ -8,7 +8,7 @@ on:
 jobs:
   codestyle:
     runs-on: ubuntu-latest
-    name: 'Codestyle & TypeScript'
+    name: '🎨 Codestyle'
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2
@@ -22,11 +22,11 @@ jobs:
       - run: pnpm check
       - run: pnpm lint
 
-  tests:
+  unit-test:
     needs:
       - codestyle
     runs-on: ubuntu-latest
-    name: '🧪 Unit- and E2E tests'
+    name: '🧪 Unit tests'
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2
@@ -37,4 +37,22 @@ jobs:
           node-version: '18'
           cache: 'pnpm'
       - run: pnpm install
-      - run: pnpm test
+      - run: pnpm test:unit
+
+  integration-tests:
+    needs:
+      - codestyle
+    runs-on: ubuntu-latest
+    name: '💻 Integration tests'
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 7.28.0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+      - run: pnpm install
+      - run: npx playwright install --with-deps
+      - run: npx playwright test
